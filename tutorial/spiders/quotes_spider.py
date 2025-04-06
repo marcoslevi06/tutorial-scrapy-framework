@@ -5,13 +5,17 @@ import scrapy
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
-    start_urls = [
-        "https://quotes.toscrape.com/page/1/",
-        "https://quotes.toscrape.com/page/2/",
-    ]
+
+    def start_requests(self):
+        '''
+        '''
+        for i in range(1, 10):
+            url = f"https://quotes.toscrape.com/page/{i}/"
+            yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
+        print(response.url)
         page = response.url.split("/")[-2]
         # filename = f"quotes-{page}.html"
-        filename = f"tutorial/Output/quotes-{page}.html"
+        filename = f"Output/quotes-{page}.html"
         Path(filename).write_bytes(response.body)
